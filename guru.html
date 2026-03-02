@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Halaman Guru - Rekap Quiz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #5c3d2e, #c8ad7f);
+            min-height: 100vh;
+            padding: 40px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .card-custom {
+            background: #f5f0e6;
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .btn-brown {
+            background: #6f4e37;
+            color: white;
+            border: none;
+        }
+
+        .btn-brown:hover {
+            background: #5a3f2b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="card-custom shadow">
+
+            <h3 class="mb-4" style="color:#5c3d2e;">Rekap Hasil Quiz Siswa</h3>
+
+            <div class="mb-3">
+                <a href="https://docs.google.com/spreadsheets/d/1EURx8zQlIDMSg9Qgipr2BaohM-SpCMt1XCgM0y1S7zk/export?format=pdf"
+                    target="_blank" class="btn btn-brown">
+                    📄 Download PDF
+                </a>
+            </div>
+
+            <div class="ratio ratio-16x9">
+                <iframe
+                    src="https://docs.google.com/spreadsheets/d/1EURx8zQlIDMSg9Qgipr2BaohM-SpCMt1XCgM0y1S7zk/preview"
+                    width="100%" height="600" frameborder="0">
+                </iframe>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
