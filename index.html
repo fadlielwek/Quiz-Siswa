@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Siswa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #5c3d2e, #c8ad7f);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .main-card {
+            background: #f5f0e6;
+            border-radius: 25px;
+            padding: 30px;
+        }
+
+        .start-form {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-brown {
+            background: #6f4e37;
+            color: white;
+            border: none;
+        }
+
+        .btn-brown:hover {
+            background: #5a3f2b;
+        }
+
+        .btn-option {
+            width: 100%;
+            margin-bottom: 10px;
+            border-radius: 12px;
+        }
+
+        .correct {
+            background-color: #4b7b3c !important;
+            color: white !important;
+        }
+
+        .wrong {
+            background-color: #a94442 !important;
+            color: white !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+
+                <div class="main-card shadow">
+
+                    <!-- START -->
+                    <div id="startBox">
+                        <h3 class="text-center mb-4" style="color:#5c3d2e;">Quiz Online</h3>
+
+                        <div class="start-form">
+                            <div class="mb-3">
+                                <label class="form-label">Nama</label>
+                                <input type="text" id="nama" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Kelas</label>
+                                <input type="text" id="kelas" class="form-control">
+                            </div>
+
+                            <button class="btn btn-brown w-100 mt-2" onclick="mulaiQuiz()">Mulai Quiz</button>
+                        </div>
+                    </div>
+
+                    <!-- QUIZ -->
+                    <div id="quizBox" class="d-none">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span id="progress" style="color:#5c3d2e;font-weight:600;"></span>
+                            <span id="score" style="color:#5c3d2e;font-weight:600;"></span>
+                        </div>
+
+                        <h5 id="soal" class="mb-3" style="color:#4b3621;"></h5>
+                        <div id="jawaban"></div>
+
+                        <button id="nextBtn" class="btn btn-brown w-100 mt-3 d-none" onclick="nextSoal()">Soal
+                            Berikutnya</button>
+                    </div>
+
+                    <!-- HASIL -->
+                    <div id="hasilBox" class="d-none text-center">
+                        <h4 style="color:#5c3d2e;">Quiz Selesai 🎉</h4>
+                        <p id="hasilText"></p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // ================= SOUND LOCAL =================
+        const soundBenar = new Audio("assets/correct.mpeg");
+        const soundSalah = new Audio("assets/wrong.mpeg");
+        const soundFinish = new Audio("assets/done.mpeg");
+
+        // preload biar gak delay
+        soundBenar.load();
+        soundSalah.load();
+        soundFinish.load();
+
+        // ================= DATA SOAL =================
+        const soalData = [
+            {
+                pertanyaan: "1. Mengapa sepatu dibungkus dengan plastik sebelum berangkat?",
+                pilihan: [
+                    "a. Agar sepatu terlihat lebih rapi",
+                    "b. Agar sepatu tidak basah oleh hujan",
+                    "c. Agar sepatu mudah dibawa",
+                    "d. Agar sepatu dapat digunakan lebih lama"
+                ],
+                benar: "b. Agar sepatu tidak basah oleh hujan"
+            },
+            {
+                pertanyaan: "2. Bagaimana kondisi cuaca saat perjalanan berlangsung?",
+                pilihan: [
+                    "a. Cerah dan berangin",
+                    "b. Mendung tanpa hujan",
+                    "c. Hujan deras",
+                    "d. Panas terik"
+                ],
+                benar: "c. Hujan deras"
+            },
+            {
+                pertanyaan: "3. Peristiwa apakah yang terjadi setelah sepeda motor melambat?",
+                pilihan: [
+                    "a. Tiba di gedung olahraga",
+                    "b. Sepeda motor mogok",
+                    "c. Menemukan jalan pintas",
+                    "d. Melepas jas hujan"
+                ],
+                benar: "d. Melepas jas hujan"
+            },
+            {
+                pertanyaan: "4. Mengapa perjalanan terasa semakin tidak menyenangkan?",
+                pilihan: [
+                    "a. Jalanan terlalu sempit",
+                    "b. Banyak genangan air di jalan",
+                    "c. Hujan mulai reda",
+                    "d. Sepeda motor melaju dengan pelan"
+                ],
+                benar: "b. Banyak genangan air di jalan"
+            },
+            {
+                pertanyaan: "5. Apa yang dilakukan ketika plastik pembungkus sepatu sobek?",
+                pilihan: [
+                    "a. Membiarkan sepatu basah terkena air",
+                    "b. Meminta plastik baru kepada Bapak",
+                    "c. Mengikat sepatu agar tetap aman dari air",
+                    "d. Melepas sepatu selama perjalanan"
+                ],
+                benar: "c. Mengikat sepatu agar tetap aman dari air"
+            },
+            {
+                pertanyaan: "6. Sikap yang ditunjukkan selama perjalanan adalah ....",
+                pilihan: [
+                    "a. Mudah menyerah saat menghadapi masalah",
+                    "b. Terburu-buru dan kurang berhati-hati",
+                    "c. Tenang serta berusaha mencari solusi",
+                    "d. Tidak peduli terhadap keadaan sekitar"
+                ],
+                benar: "c. Tenang serta berusaha mencari solusi"
+            },
+            {
+                pertanyaan: "7. Mengapa digunakan peta di tengah perjalanan?",
+                pilihan: [
+                    "a. Untuk mencari tempat berteduh",
+                    "b. Untuk mengetahui jadwal pertandingan",
+                    "c. Untuk mencari jalan pintas karena macet",
+                    "d. Untuk memastikan arah perjalanan pulang"
+                ],
+                benar: "c. Untuk mencari jalan pintas karena macet"
+            },
+            {
+                pertanyaan: "8. Mengapa orang-orang menatap ketika hampir sampai di gedung olahraga?",
+                pilihan: [
+                    "a. Datang terlambat ke lokasi pertandingan",
+                    "b. Sepeda motor mengalami kerusakan",
+                    "c. Masih mengenakan jas hujan",
+                    "d. Membawa barang yang tidak biasa"
+                ],
+                benar: "c. Masih mengenakan jas hujan"
+            },
+            {
+                pertanyaan: "9. Kesalahan kecil apakah yang terjadi sebelum pertandingan dimulai?",
+                pilihan: [
+                    "a. Datang terlambat ke gedung olahraga",
+                    "b. Tidak membawa sepatu cadangan",
+                    "c. Lupa melepas pembungkus sepatu",
+                    "d. Salah memasuki gedung olahraga"
+                ],
+                benar: "c. Lupa melepas pembungkus sepatu"
+            },
+            {
+                pertanyaan: "10. Pesan yang dapat diambil dari cerita tersebut adalah ....",
+                pilihan: [
+                    "a. Hujan selalu menyebabkan masalah",
+                    "b. Perjalanan sebaiknya dihindari saat hujan",
+                    "c. Kesabaran dan kesiapan membantu mengatasi masalah",
+                    "d. Kendaraan bermotor sering merepotkan"
+                ],
+                benar: "c. Kesabaran dan kesiapan membantu mengatasi masalah"
+            }
+        ];
+
+        let indexSoal = 0, skorBenar = 0, skorSalah = 0;
+        let namaSiswa = "", kelasSiswa = "";
+
+        function mulaiQuiz() {
+            namaSiswa = document.getElementById("nama").value;
+            kelasSiswa = document.getElementById("kelas").value;
+
+            if (namaSiswa === "" || kelasSiswa === "") {
+                alert("Isi nama dan kelas dulu!");
+                return;
+            }
+
+            document.getElementById("startBox").classList.add("d-none");
+            document.getElementById("quizBox").classList.remove("d-none");
+
+            tampilSoal();
+        }
+
+        function tampilSoal() {
+            let soal = soalData[indexSoal];
+
+            document.getElementById("progress").innerText = "Soal " + (indexSoal + 1) + " / " + soalData.length;
+            document.getElementById("score").innerText = "Benar: " + skorBenar;
+
+            document.getElementById("soal").innerText = soal.pertanyaan;
+
+            let html = "";
+            soal.pilihan.forEach(p => {
+                html += `<button class="btn btn-outline-dark btn-option" onclick="cekJawaban(this,'${p}')">${p}</button>`;
+            });
+
+            document.getElementById("jawaban").innerHTML = html;
+            document.getElementById("nextBtn").classList.add("d-none");
+        }
+
+        function cekJawaban(btn, pilihan) {
+
+            let semuaBtn = document.querySelectorAll(".btn-option");
+            semuaBtn.forEach(b => b.disabled = true);
+
+            if (pilihan === soalData[indexSoal].benar) {
+                skorBenar++;
+                btn.classList.add("correct");
+
+                soundBenar.currentTime = 0;
+                soundBenar.play();
+
+            } else {
+                skorSalah++;
+                btn.classList.add("wrong");
+
+                soundSalah.currentTime = 0;
+                soundSalah.play();
+
+                semuaBtn.forEach(b => {
+                    if (b.innerText === soalData[indexSoal].benar) {
+                        b.classList.add("correct");
+                    }
+                });
+            }
+
+            document.getElementById("nextBtn").classList.remove("d-none");
+        }
+
+        function nextSoal() {
+            indexSoal++;
+            if (indexSoal < soalData.length) {
+                tampilSoal();
+            } else {
+                tampilHasil();
+            }
+        }
+
+        function tampilHasil() {
+
+            document.getElementById("quizBox").classList.add("d-none");
+            document.getElementById("hasilBox").classList.remove("d-none");
+
+            document.getElementById("hasilText").innerHTML =
+                `<strong>${namaSiswa}</strong> (${kelasSiswa})<br>
+     Skor Benar: ${skorBenar}<br>
+     Skor Salah: ${skorSalah}`;
+
+            // 🔊 PLAY SOUND SELESAI
+            soundFinish.currentTime = 0;
+            soundFinish.play();
+
+            kirimKeForm();
+        }
+
+        // ================= KIRIM KE GOOGLE FORM =================
+        function kirimKeForm() {
+
+            let formURL = "https://docs.google.com/forms/d/e/1FAIpQLScaXDRA6Sf_9w1n-jJ6r4BLtK6J-UuBGejnsroFDvKIcKcAYg/formResponse";
+
+            let data = new FormData();
+            data.append("entry.802697235", namaSiswa);
+            data.append("entry.275993981", kelasSiswa);
+            data.append("entry.1756706222", skorBenar);
+            data.append("entry.128410703", skorSalah);
+
+            fetch(formURL, {
+                method: "POST",
+                mode: "no-cors",
+                body: data
+            });
+        }
+
+    </script>
+
+</body>
+
+</html>
