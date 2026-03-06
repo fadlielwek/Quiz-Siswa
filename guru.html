@@ -10,26 +10,71 @@
 
     <style>
         body {
-            background: linear-gradient(135deg, #5c3d2e, #c8ad7f);
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             min-height: 100vh;
             padding: 40px;
             font-family: 'Segoe UI', sans-serif;
-        }
-
-        .card-custom {
-            background: #f5f0e6;
-            border-radius: 20px;
-            padding: 20px;
-        }
-
-        .btn-brown {
-            background: #6f4e37;
             color: white;
-            border: none;
         }
 
-        .btn-brown:hover {
-            background: #5a3f2b;
+        /* CARD */
+        .card-custom {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        /* JUDUL */
+        .title-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .title-box h3 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .title-line {
+            width: 6px;
+            height: 30px;
+            background: linear-gradient(180deg, #4facfe, #00f2fe);
+            border-radius: 4px;
+        }
+
+        /* BUTTON */
+        .btn-download {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border: none;
+            color: white;
+            font-weight: 500;
+            padding: 10px 18px;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* IFRAME BOX */
+        .sheet-box {
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+            padding: 5px;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:768px) {
+            body {
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -37,25 +82,36 @@
 <body>
 
     <div class="container">
-        <div class="card-custom shadow">
 
-            <h3 class="mb-4" style="color:#5c3d2e;">Rekap Hasil Quiz Siswa</h3>
+        <div class="card-custom shadow-lg">
 
-            <div class="mb-3">
-                <a href="https://docs.google.com/spreadsheets/d/1EURx8zQlIDMSg9Qgipr2BaohM-SpCMt1XCgM0y1S7zk/export?format=pdf"
-                    target="_blank" class="btn btn-brown">
-                    📄 Download PDF
-                </a>
+            <div class="title-box">
+                <div class="title-line"></div>
+                <h3>Rekap Hasil Quiz Siswa</h3>
             </div>
 
-            <div class="ratio ratio-16x9">
+            <div class="mb-4">
+
+                <a href="https://docs.google.com/spreadsheets/d/1EURx8zQlIDMSg9Qgipr2BaohM-SpCMt1XCgM0y1S7zk/export?format=pdf"
+                    target="_blank" class="btn btn-download">
+
+                    📄 Download Rekap PDF
+
+                </a>
+
+            </div>
+
+            <div class="sheet-box ratio ratio-16x9">
+
                 <iframe
                     src="https://docs.google.com/spreadsheets/d/1EURx8zQlIDMSg9Qgipr2BaohM-SpCMt1XCgM0y1S7zk/preview"
                     width="100%" height="600" frameborder="0">
                 </iframe>
+
             </div>
 
         </div>
+
     </div>
 
 </body>
